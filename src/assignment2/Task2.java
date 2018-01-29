@@ -1,7 +1,4 @@
-// Ashley Pafko 101210828
-// SEIS 601
-// Assignment Two, Task One
-// Wednesday, September 20th, 2017
+
 package assignment2;
 // This program prompts the user to enter the day, month, and year of their 
 // birthday. The program then displays the age of the person is the form of 
