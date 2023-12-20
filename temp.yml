@@ -1,0 +1,30 @@
+name: Add Label to PR
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  add-label:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    - name: Add label to PR
+      uses: actions/github-script@v5
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const labels = ["your-label-name"];
+          const github = context.github;
+          const issue = github.issues;
+          await issue.addLabels({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: context.payload.pull_request.number,
+            labels: labels
+          });
