@@ -1,0 +1,55 @@
+name: Check Terraform Environment Changes
+
+on:
+  pull_request:
+    paths:
+      - 'nonprod/**'
+      - 'prod/**'
+    types: [opened, synchronize]
+
+jobs:
+  check_changes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Get Terraform modules
+        run: terraform init
+
+      - name: Create Terraform plan for nonprod
+        id: plan_nonprod
+        run: terraform plan -out nonprod.tfplan nonprod/
+
+      - name: Create Terraform plan for prod
+        id: plan_prod
+        run: terraform plan -out prod.tfplan prod/
+
+      - name: Get changed resources
+        id: diff_changes
+        run: |
+          terraform show -json nonprod.tfplan > nonprod.json
+          terraform show -json prod.tfplan > prod.json
+          jq -s '.[0] - .[1]' nonprod.json prod.json > diff.json
+
+      - name: Check for differences and exclude files
+        run: |
+          jq 'del(.resource_changes[] | select(.change.actions == ["no-op"]))' diff.json > filtered_diff.json
+          cat filtered_diff.json
+
+      - name: Label PR if there are differences
+        if: steps.check_changes.outputs.filtered_diff != '[]'
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'There are changes between nonprod and prod environments.'
+            })
