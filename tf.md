@@ -1,3 +1,7 @@
+if the files in nonprod/ and prod/ are exactly the same, and I make a change in nonprod , I want the workflow to promote the exact same change in prod and make the change for me. How do I do that from the workflow?
+
+
+
 Certainly! Here’s an example workflow using GitHub Actions to detect changes between environments using terraform plan and excluding specific files:
 
 name: Check Terraform Environment Changes
