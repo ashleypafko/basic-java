@@ -98,3 +98,22 @@ Remember to manage your state files accordingly to ensure each environment has i
 
 Yes, in Terraform, versioning modules is a common practice. For environment promotion, you can consider using separate branches or tags for each environment (e.g., nonprod and prod). With GitHub Actions, you can trigger different workflows based on branch or tag names. For instance, upon merging changes to the nonprod branch, trigger a workflow to apply changes to the nonprod environment. Similarly, merging to the prod branch or tagging a commit could trigger a workflow to apply changes to the prod environment. This allows controlled promotion of changes through your environments.
 
+---
+
+Certainly! For publishing Terraform modules and setting it up with a folder structure, you can start with the official Terraform documentation and other online resources:
+
+1. **Terraform Registry Documentation:** The Terraform Registry is the primary place for discovering and sharing Terraform modules. The official documentation on publishing modules will guide you through the process.
+   
+2. **Folder Structure and Module Composition:** While there might not be specific documentation on folder-based module organization, understanding module composition and structuring your code in a modular way within folders for different environments can be found in Terraform's documentation on module creation and structuring.
+
+3. **Terraform Module Registry Providers:** Explore specific documentation for module registry providers you plan to use, such as Terraform Registry, GitHub Packages, or other private registries. Each provider may have its own guidelines for publishing modules.
+
+4. **Community Blogs and Tutorials:** Often, community-generated content offers practical examples and insights into real-world usage. Search for blogs, tutorials, or GitHub repositories that demonstrate module publication with a folder-based structure.
+
+5. **GitHub Actions Workflows:** Review GitHub Actions documentation for creating workflows that tag commits, create releases, and publish artifacts. You'll need this to automate the module publication process.
+
+By combining these resources and understanding how modules are structured and published, you can create a system that aligns with your folder-based structure for different environments while publishing modules appropriately.
+
+
+
+
