@@ -1,0 +1,45 @@
+name: Terraform Deployment
+
+on:
+  push:
+    branches:
+      - main # Assuming main is the branch where changes are pushed
+
+jobs:
+  deploy_nonprod:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Terraform Init nonprod
+        working-directory: env/nonprod
+        run: terraform init
+      
+      - name: Terraform Plan nonprod
+        working-directory: env/nonprod
+        run: terraform plan -out=tfplan
+      
+      - name: Terraform Apply nonprod
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' # Change this condition as needed
+        working-directory: env/nonprod
+        run: terraform apply tfplan
+
+  deploy_prod:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Terraform Init prod
+        working-directory: env/prod
+        run: terraform init
+      
+      - name: Terraform Plan prod
+        working-directory: env/prod
+        run: terraform plan -out=tfplan
+      
+      - name: Terraform Apply prod
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' # Change this condition as needed
+        working-directory: env/prod
+        run: terraform apply tfplan
