@@ -115,5 +115,42 @@ Certainly! For publishing Terraform modules and setting it up with a folder stru
 By combining these resources and understanding how modules are structured and published, you can create a system that aligns with your folder-based structure for different environments while publishing modules appropriately.
 
 
+---
 
+'''
+name: Publish Terraform Module
 
+on:
+  push:
+    paths:
+      - 'env/nonprod/**'
+      - 'env/prod/**'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Publish Non-Prod Module
+        if: ${{ contains(github.event.head_commit.modified, 'env/nonprod') }}
+        run: |
+          cd env/nonprod
+          # Adjust the versioning strategy and publishing command based on your requirements
+          terraform version # Assuming you have versioning setup within Terraform
+          terraform login # Login to your module registry if required
+          terraform publish # Publish the module
+
+      - name: Publish Prod Module
+        if: ${{ contains(github.event.head_commit.modified, 'env/prod') }}
+        run: |
+          cd env/prod
+          # Adjust the versioning strategy and publishing command based on your requirements
+          terraform version # Assuming you have versioning setup within Terraform
+          terraform login # Login to your module registry if required
+          terraform publish # Publish the module
+'''
